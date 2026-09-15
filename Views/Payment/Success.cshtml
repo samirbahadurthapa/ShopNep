@@ -1,0 +1,17 @@
+@model Order
+@{
+    ViewData["Title"] = "Payment Successful";
+}
+
+<div class="text-center py-5">
+    <div style="font-size:4rem;">✅</div>
+    <h2 class="text-success">Payment Successful!</h2>
+    @if (Model != null)
+    {
+        <p>Your order <strong>#@Model.Id</strong> has been confirmed. Total paid: <strong>Rs. @Model.TotalAmount.ToString("N2")</strong></p>
+        <a asp-controller="Order" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-primary">View Order Details</a>
+    }
+    <div class="mt-3">
+        <a asp-controller="Home" asp-action="Index" class="btn btn-link">Continue Shopping</a>
+    </div>
+</div>

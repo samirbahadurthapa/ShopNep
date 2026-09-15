@@ -1,0 +1,41 @@
+@model ECommerceApp.Services.EsewaFormData
+@{
+    ViewData["Title"] = "Redirecting to eSewa";
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Redirecting to eSewa...</title>
+</head>
+<body>
+    <div style="text-align:center; margin-top:100px; font-family:sans-serif;">
+        <h3>Redirecting you to eSewa to complete your payment...</h3>
+        <p>Please do not close this window.</p>
+    </div>
+
+    <!--
+        eSewa's ePay v2 flow expects a real browser form POST (not an AJAX/fetch call),
+        because it needs to redirect the user's browser through their hosted payment page.
+        We build the form server-side (with a signed HMAC) and auto-submit it here.
+    -->
+    <form id="esewaForm" method="POST" action="@Model.PaymentFormUrl">
+        <input type="hidden" name="amount" value="@Model.Amount" />
+        <input type="hidden" name="tax_amount" value="@Model.TaxAmount" />
+        <input type="hidden" name="total_amount" value="@Model.TotalAmount" />
+        <input type="hidden" name="transaction_uuid" value="@Model.TransactionUuid" />
+        <input type="hidden" name="product_code" value="@Model.ProductCode" />
+        <input type="hidden" name="product_service_charge" value="@Model.ProductServiceCharge" />
+        <input type="hidden" name="product_delivery_charge" value="@Model.ProductDeliveryCharge" />
+        <input type="hidden" name="success_url" value="@Model.SuccessUrl" />
+        <input type="hidden" name="failure_url" value="@Model.FailureUrl" />
+        <input type="hidden" name="signed_field_names" value="@Model.SignedFieldNames" />
+        <input type="hidden" name="signature" value="@Model.Signature" />
+    </form>
+
+    <script>
+        document.getElementById('esewaForm').submit();
+    </script>
+</body>
+</html>

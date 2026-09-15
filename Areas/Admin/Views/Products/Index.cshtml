@@ -1,0 +1,33 @@
+@model List<Product>
+@{
+    ViewData["Title"] = "Manage Products";
+}
+
+<div class="d-flex justify-content-between align-items-center">
+    <h2>Products</h2>
+    <a asp-action="Create" class="btn btn-primary">+ Add Product</a>
+</div>
+
+<table class="table table-striped mt-3">
+    <thead>
+        <tr><th>Name</th><th>Category</th><th>Price</th><th>Stock</th><th>Active</th><th></th></tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.Name</td>
+                <td>@p.Category?.Name</td>
+                <td>Rs. @p.Price.ToString("N2")</td>
+                <td>@p.StockQuantity</td>
+                <td>@(p.IsActive ? "Yes" : "No")</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@p.Id" class="btn btn-sm btn-outline-secondary">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@p.Id" method="post" class="d-inline" onsubmit="return confirm('Remove this product?');">
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

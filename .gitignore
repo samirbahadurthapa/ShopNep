@@ -1,0 +1,20 @@
+bin/
+obj/
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+.vs/
+appsettings.Development.json
+appsettings.Local.json
+appsettings.*.local.json
+.env
+.env.*
+!.env.example
+
+# Local secrets and certificates
+secrets.json
+*.pfx
+*.p12
+*.key
+*.pem

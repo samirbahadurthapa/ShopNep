@@ -1,0 +1,58 @@
+@model Product
+@{
+    ViewData["Title"] = Model.Name;
+    var related = ViewBag.RelatedProducts as List<Product>;
+}
+
+<div class="row">
+    <div class="col-md-5">
+        <img src="@(Model.ImageUrl ?? "/images/placeholder.png")" class="img-fluid rounded shadow-sm" alt="@Model.Name" />
+    </div>
+    <div class="col-md-7">
+        <h2>@Model.Name</h2>
+        <p class="text-muted">Category: @Model.Category?.Name</p>
+        <h3 class="text-primary">Rs. @Model.Price.ToString("N2")</h3>
+
+        @if (Model.InStock)
+        {
+            <p class="text-success">In stock (@Model.StockQuantity available)</p>
+        }
+        else
+        {
+            <p class="text-danger">Out of stock</p>
+        }
+
+        <p>@Model.Description</p>
+
+        @if (Model.InStock)
+        {
+            <form asp-controller="Cart" asp-action="Add" method="post" class="d-flex align-items-center gap-2">
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <label for="quantity" class="form-label mb-0">Qty:</label>
+                <input type="number" id="quantity" name="quantity" value="1" min="1" max="@Model.StockQuantity" class="form-control" style="width:90px;" />
+                <button type="submit" class="btn btn-primary">Add to Cart</button>
+            </form>
+        }
+    </div>
+</div>
+
+@if (related != null && related.Any())
+{
+    <hr class="my-4" />
+    <h4>You might also like</h4>
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        @foreach (var p in related)
+        {
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <img src="@(p.ImageUrl ?? "/images/placeholder.png")" class="card-img-top" style="height:150px;object-fit:cover;" />
+                    <div class="card-body">
+                        <h6 class="card-title">@p.Name</h6>
+                        <p class="fw-bold">Rs. @p.Price.ToString("N2")</p>
+                        <a asp-controller="Product" asp-action="Details" asp-route-id="@p.Id" class="btn btn-outline-primary btn-sm">View</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

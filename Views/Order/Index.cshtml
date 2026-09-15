@@ -1,0 +1,50 @@
+@model List<Order>
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<h2>My Order History</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">You haven't placed any orders yet.</div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Order #</th>
+                <th>Date</th>
+                <th>Items</th>
+                <th>Total</th>
+                <th>Payment</th>
+                <th>Status</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var order in Model)
+            {
+                <tr>
+                    <td>#@order.Id</td>
+                    <td>@order.OrderDate.ToLocalTime().ToString("MMM dd, yyyy")</td>
+                    <td>@order.Items.Sum(i => i.Quantity) item(s)</td>
+                    <td>Rs. @order.TotalAmount.ToString("N2")</td>
+                    <td>@order.PaymentMethod</td>
+                    <td>
+                        <span class="badge bg-@(order.Status switch {
+                            OrderStatus.Paid => "success",
+                            OrderStatus.Failed => "danger",
+                            OrderStatus.PendingPayment => "warning",
+                            OrderStatus.Cancelled => "secondary",
+                            _ => "info" })">
+                            @order.Status
+                        </span>
+                    </td>
+                    <td><a asp-action="Details" asp-route-id="@order.Id" class="btn btn-sm btn-outline-primary">View</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

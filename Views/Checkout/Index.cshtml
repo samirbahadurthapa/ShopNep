@@ -1,0 +1,77 @@
+@model CheckoutViewModel
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h2>Checkout</h2>
+
+<div class="row">
+    <div class="col-md-7">
+        <div class="card mb-3">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span class="fw-bold">Delivery Address</span>
+                <a asp-action="AddAddress" class="btn btn-sm btn-outline-primary">+ Add New Address</a>
+            </div>
+            <div class="card-body">
+                @if (!Model.Addresses.Any())
+                {
+                    <p class="text-muted">You have no saved addresses yet. Click "Add New Address" above.</p>
+                }
+                else
+                {
+                    <form asp-action="PlaceOrder" method="post" id="placeOrderForm">
+                        @foreach (var addr in Model.Addresses)
+                        {
+                            <div class="form-check border rounded p-2 mb-2">
+                                <input class="form-check-input" type="radio" name="addressId" id="addr@(addr.Id)"
+                                       value="@addr.Id" checked="@(Model.SelectedAddressId == addr.Id)" />
+                                <label class="form-check-label" for="addr@(addr.Id)">
+                                    <strong>@addr.FullName</strong> — @addr.Phone <br />
+                                    @addr.StreetAddress, @addr.City @addr.State @addr.PostalCode, @addr.Country
+                                    @if (addr.IsDefault)
+                                    {
+                                        <span class="badge bg-secondary ms-1">Default</span>
+                                    }
+                                </label>
+                            </div>
+                        }
+
+                        <hr />
+                        <h6>Payment Method</h6>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="pmEsewa"
+                                   value="@((int)PaymentMethod.Esewa)" checked />
+                            <label class="form-check-label" for="pmEsewa">eSewa</label>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="radio" name="paymentMethod" id="pmCod"
+                                   value="@((int)PaymentMethod.CashOnDelivery)" />
+                            <label class="form-check-label" for="pmCod">Cash on Delivery</label>
+                        </div>
+
+                        <button type="submit" class="btn btn-success">Place Order</button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header fw-bold">Order Summary</div>
+            <ul class="list-group list-group-flush">
+                @foreach (var item in Model.Cart.Items)
+                {
+                    <li class="list-group-item d-flex justify-content-between">
+                        <span>@item.ProductName x @item.Quantity</span>
+                        <span>Rs. @item.LineTotal.ToString("N2")</span>
+                    </li>
+                }
+                <li class="list-group-item d-flex justify-content-between fw-bold">
+                    <span>Total</span>
+                    <span>Rs. @Model.Cart.Subtotal.ToString("N2")</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

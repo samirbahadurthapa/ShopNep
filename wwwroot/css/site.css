@@ -1,0 +1,28 @@
+html {
+  font-size: 15px;
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  background-color: #f8f9fa;
+}
+
+.card {
+  border-radius: 0.5rem;
+}
+
+.card-img-top {
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  background-color: #eee;
+}
+
+.navbar-brand {
+  font-size: 1.3rem;
+}
+
+.footer {
+  background-color: #fff;
+}
