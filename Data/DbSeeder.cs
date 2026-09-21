@@ -56,15 +56,41 @@ namespace ECommerceApp.Data
                 var home = categories[3];
 
                 context.Products.AddRange(
-                    new Product { Name = "Wireless Mouse", Description = "Ergonomic 2.4GHz wireless mouse", Price = 1200, StockQuantity = 50, CategoryId = electronics.Id, ImageUrl = "/images/placeholder.png" },
-                    new Product { Name = "Bluetooth Headphones", Description = "Over-ear, 20 hr battery life", Price = 3500, StockQuantity = 30, CategoryId = electronics.Id, ImageUrl = "/images/placeholder.png" },
-                    new Product { Name = "Cotton T-Shirt", Description = "100% cotton, unisex fit", Price = 800, StockQuantity = 100, CategoryId = clothing.Id, ImageUrl = "/images/placeholder.png" },
-                    new Product { Name = "Denim Jacket", Description = "Classic blue denim jacket", Price = 2500, StockQuantity = 40, CategoryId = clothing.Id, ImageUrl = "/images/placeholder.png" },
-                    new Product { Name = "Clean Code", Description = "A Handbook of Agile Software Craftsmanship", Price = 1500, StockQuantity = 25, CategoryId = books.Id, ImageUrl = "/images/placeholder.png" },
-                    new Product { Name = "Electric Kettle", Description = "1.5L stainless steel kettle", Price = 1800, StockQuantity = 60, CategoryId = home.Id, ImageUrl = "/images/placeholder.png" }
+                    new Product { Name = "Wireless Mouse", Description = "Ergonomic 2.4GHz wireless mouse", Price = 1200, StockQuantity = 50, CategoryId = electronics.Id, ImageUrl = "https://images.unsplash.com/photo-1527814050087-3793815479db?w=900&q=85" },
+                    new Product { Name = "Bluetooth Headphones", Description = "Over-ear, 20 hr battery life", Price = 3500, StockQuantity = 30, CategoryId = electronics.Id, ImageUrl = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=85" },
+                    new Product { Name = "Cotton T-Shirt", Description = "100% cotton, unisex fit", Price = 800, StockQuantity = 100, CategoryId = clothing.Id, ImageUrl = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900&q=85" },
+                    new Product { Name = "Denim Jacket", Description = "Classic blue denim jacket", Price = 2500, StockQuantity = 40, CategoryId = clothing.Id, ImageUrl = "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=900&q=85" },
+                    new Product { Name = "Clean Code", Description = "A Handbook of Agile Software Craftsmanship", Price = 1500, StockQuantity = 25, CategoryId = books.Id, ImageUrl = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=900&q=85" },
+                    new Product { Name = "Electric Kettle", Description = "1.5L stainless steel kettle", Price = 1800, StockQuantity = 60, CategoryId = home.Id, ImageUrl = "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=900&q=85" }
                 );
                 await context.SaveChangesAsync();
             }
+
+            var productPhotos = new Dictionary<string, string>
+            {
+                ["Wireless Mouse"] = "https://images.unsplash.com/photo-1527814050087-3793815479db?w=900&q=85",
+                ["Bluetooth Headphones"] = "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=900&q=85",
+                ["Cotton T-Shirt"] = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=900&q=85",
+                ["Denim Jacket"] = "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=900&q=85",
+                ["Clean Code"] = "https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=900&q=85",
+                ["Electric Kettle"] = "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=900&q=85"
+            };
+            var legacyPhotoUrls = new[]
+            {
+                "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=900&q=85",
+                "https://images.unsplash.com/photo-1594212699903-ec8a3eca50f5?w=900&q=85"
+            };
+
+            var seededProducts = await context.Products
+                .Where(product => productPhotos.Keys.Contains(product.Name) &&
+                    (product.ImageUrl == "/images/placeholder.png" || legacyPhotoUrls.Contains(product.ImageUrl!)))
+                .ToListAsync();
+
+            foreach (var product in seededProducts)
+                product.ImageUrl = productPhotos[product.Name];
+
+            if (seededProducts.Count > 0)
+                await context.SaveChangesAsync();
         }
     }
 }

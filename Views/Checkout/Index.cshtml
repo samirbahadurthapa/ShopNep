@@ -24,7 +24,7 @@
                         {
                             <div class="form-check border rounded p-2 mb-2">
                                 <input class="form-check-input" type="radio" name="addressId" id="addr@(addr.Id)"
-                                       value="@addr.Id" checked="@(Model.SelectedAddressId == addr.Id)" />
+                                       value="@addr.Id" checked="@(Model.SelectedAddressId == addr.Id ? "checked" : null)" />
                                 <label class="form-check-label" for="addr@(addr.Id)">
                                     <strong>@addr.FullName</strong> — @addr.Phone <br />
                                     @addr.StreetAddress, @addr.City @addr.State @addr.PostalCode, @addr.Country
