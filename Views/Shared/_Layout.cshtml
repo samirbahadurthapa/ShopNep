@@ -59,8 +59,16 @@
                                                                         asp-action="Index"><span aria-hidden="true">▢</span> Cart</a>
                                             </li>
                                             <li class="nav-item">
-                                                <span class="nav-link user-greeting">Hi, @UserManager.GetUserName(User)</span>
-                                            </li>
+          @if (User.IsInRole("Admin"))
+    {
+        <span class="nav-link user-greeting">Hi, Admin</span>
+    }
+    else
+    {
+        var currentUser = await UserManager.GetUserAsync(User);
+        <span class="nav-link user-greeting">Hi, @(currentUser?.FullName ?? UserManager.GetUserName(User))</span>
+    }
+</li>
                                             <li class="nav-item">
                                                 <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                                     <button type="submit" class="btn btn-link nav-link">Logout</button>
